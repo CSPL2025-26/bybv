@@ -132,6 +132,7 @@ function Header() {
 
   useEffect(() => {
     if (didMountRef.current) {
+      getLocation()
       contextValues.setCartSummary(dataArray['CartSummary'])
       if (localStorage.getItem("USER_SESSION")) {
         cartSessionData();
@@ -145,11 +146,42 @@ function Header() {
     didMountRef.current = false;
   }, [getHeaderData, cartSessionData, getbannerData]);
 
-
   const loginModal = () => {
     contextValues.setToggleLoginModal(!contextValues.toggleLoginModal)
   }
+ 
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState("");
+  const [error, setError] = useState("");
 
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation not supported!");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        setLocation({ lat, lng });
+
+        // Reverse Geocode API
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+        );
+
+        const data = await response.json(); 
+        if (data && data.display_name) {
+          setAddress(data.display_name);
+        } else {
+          setAddress("Unable to fetch address");
+        }
+      },
+      (err) => setError(err.message)
+    );
+  };
 
   return (
     <>
