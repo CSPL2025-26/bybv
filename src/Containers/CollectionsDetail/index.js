@@ -100,7 +100,8 @@ function CollectionsDetail() {
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const getProductDetails = () => {
     const dataString = {
-      slug: slug
+      slug: slug,
+      location: contextValues.currentLocation
     }
     ApiService.postData("product-details", dataString).then((res) => {
       if (res.status == "success") {
@@ -190,6 +191,7 @@ function CollectionsDetail() {
     const dataString = {
       variation: selvararray,
       product_id: productData.product_id,
+      location: contextValues.currentLocation
     };
 
     ApiService.postData("variation-wise-price", dataString).then((res) => {

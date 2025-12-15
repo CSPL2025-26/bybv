@@ -5,7 +5,7 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
 
-  const [cartCount,setcartCount] = useState(0) 
+  const [cartCount, setcartCount] = useState(0)
   const [settingData, setSettingData] = useState({});
   const [settingImageBaseUrl, setSettingImageBaseUrl] = useState('');
   const [toggleLoginModal, setToggleLoginModal] = useState(false);
@@ -14,7 +14,8 @@ export const DataProvider = ({ children }) => {
   const [cartSessionData, setCartSessionData] = useState([]);
   const [cartDealSessionData, setCartDealSessionData] = useState([]);
   const [cartSummary, setCartSummary] = useState({});
-
+  const [currentLocation, setCurrentLocation] = useState(localStorage.getItem("userLocation") ? JSON.parse(localStorage.getItem("userLocation")) : {});
+  const [curretnLocationLoader, setCurretnLocationLoader] = useState(false)
   const didMountRef = useRef(true);
 
   useEffect(() => {
@@ -27,23 +28,29 @@ export const DataProvider = ({ children }) => {
       });
     }
     didMountRef.current = false;
-  }, );
+  },);
 
+  const saveLocation = (city, state, country, pincode) => {
+    const payload = { city, state, country, pincode };
+    localStorage.setItem("userLocation", JSON.stringify(payload));
+    setCurrentLocation(payload);
+  };
   return (
     <DataContext.Provider value={
       {
-        cartCount,setcartCount,
+        cartCount, setcartCount,
         settingData, setSettingData,
-        settingImageBaseUrl, setSettingImageBaseUrl, 
+        settingImageBaseUrl, setSettingImageBaseUrl,
         toggleLoginModal, setToggleLoginModal,
-        togglePopupModal, settogglePopupModal, 
+        togglePopupModal, settogglePopupModal,
         couponSession, setCouponSession,
         cartSessionData, setCartSessionData,
         cartDealSessionData, setCartDealSessionData,
         cartSummary, setCartSummary,
-
-        }
-      }>
+        currentLocation, saveLocation ,
+        curretnLocationLoader, setCurretnLocationLoader
+      }
+    }>
       {children}
     </DataContext.Provider>
   );

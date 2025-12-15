@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import 'swiper/css';
@@ -7,8 +7,10 @@ import { ApiService } from '../../services/apiServices';
 import constants from '../../services/constants';
 import Skeleton from 'react-loading-skeleton';
 import QuickviewModal from '../Modals/quickview_modal';
+import DataContext from '../context';
 function HomeTestimonial() {
   const didMountRef = useRef(true);
+  const contextValues = useContext(DataContext);
   const [testimonials, setTestimonials] = useState([])
   const [testimonialImage, setTestimonialImage] = useState('')
   const [loading, setLoading] = useState();
@@ -32,12 +34,14 @@ function HomeTestimonial() {
 
   const getTestimonialData = () => {
     setLoading(true)
-    ApiService.fetchData('testimonials').then(res => {
+    const payload = contextValues.currentLocation;
+
+    ApiService.postData('testimonials',payload).then(res => {
       if (res.status === 'success') {
         setTestimonials(res.testimonial)
         setTestimonialImage(res.testimonial_image_path)
         setLoading(false)
-      }else{
+      } else {
         setLoading(false)
       }
     }).catch(error => {
@@ -193,7 +197,7 @@ function HomeTestimonial() {
                                   <div className='product-testimonials__subtitle subtitle'>What The Clients are Saying</div>
                                   <h2 className="section-header__title title--section h2">Testimonials</h2>
                                   <div className="product-testimonials__slide-stars">
-                                    {renderRatingStars(value.testimonial_rating)} 
+                                    {renderRatingStars(value.testimonial_rating)}
                                   </div>
                                   <div className='product-testimonials__desc richtext__content h3'>
                                     <p dangerouslySetInnerHTML={{ __html: value.testimonial_desc }}></p>

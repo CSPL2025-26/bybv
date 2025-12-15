@@ -16,7 +16,6 @@ import constants from '../../Components/services/constants'
 import { Helmet } from 'react-helmet'
 import { ApiService } from '../../Components/services/apiServices'
 import { useNavigate } from 'react-router-dom'
-import HomeInstagram from '../HomeInstagram'
 import ProductsVedio from '../../Components/Elements/sections/products_video'
 import CrazyDealsProducts from '../../Components/Elements/sections/cazy_deals'
 
@@ -90,7 +89,7 @@ function Home() {
       <Popularproducts />
       <Category />
       <TagProducts />
-      <CrazyDealsProducts/>
+      <CrazyDealsProducts />
       <HomeCategory />
       <Deals />
       <RecommendedProduct />
@@ -98,11 +97,8 @@ function Home() {
       <HomeTestimonial />
       <HomeBlogs />
       <HomeFaq />
-      {/* <HomeInstagram/> */}
-      <Footer />
-
-    </>
-
+      <Footer /> 
+    </> 
   )
 }
 

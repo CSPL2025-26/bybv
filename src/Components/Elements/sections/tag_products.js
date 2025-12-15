@@ -1,13 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { ApiService } from "../../services/apiServices";
 import constants from "../../services/constants";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import QuickviewModal from "../Modals/quickview_modal";
-
+import DataContext from "../context";
 function TagProducts() {
   const didMountRef = useRef(true);
+  const contextValues = useContext(DataContext);
   const [tagProductsData, setTagProductsData] = useState([]);
   const [loading, setLoading] = useState()
   const [showModal, setShowModal] = useState(false)
@@ -24,7 +25,8 @@ function TagProducts() {
 
   const getTagProduct = useCallback(() => {
     setLoading(true)
-    ApiService.fetchData("products-tags").then((res) => {
+    const payload = contextValues.currentLocation;
+    ApiService.postData("products-tags", payload).then((res) => {
       if (res.status == "success") {
         setTagProductsData(res.tagdetails);
         setLoading(false)
@@ -37,7 +39,7 @@ function TagProducts() {
       getTagProduct();
     }
     didMountRef.current = false;
-  }, [getTagProduct]); 
+  }, [getTagProduct]);
 
   let formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,

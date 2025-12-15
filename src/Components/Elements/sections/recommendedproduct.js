@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState, useCallback, useContext } from 'react'
 import { ApiService } from '../../services/apiServices';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -8,11 +8,11 @@ import 'swiper/css/pagination';
 import constants from '../../services/constants';
 import Skeleton from 'react-loading-skeleton';
 import QuickviewModal from '../Modals/quickview_modal';
-
+import DataContext from '../context';
 
 function RecommendedProduct() {
   const didMountRef = useRef(true)
-
+  const contextValues = useContext(DataContext);
   const [productData, setProductData] = useState([])
   const [loading, setLoading] = useState();
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +38,9 @@ function RecommendedProduct() {
 
   const getRecomProduct = () => {
     setLoading(true)
-    ApiService.fetchData("recommended-products-list").then((res) => {
+    const payload = contextValues.currentLocation;
+
+    ApiService.postData("recommended-products-list", payload).then((res) => {
       if (res.status == 'success') {
         setProductData(res.recommendedproducts)
         setLoading(false)

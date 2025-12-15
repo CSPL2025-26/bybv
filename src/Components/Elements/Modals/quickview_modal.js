@@ -69,8 +69,9 @@ function QuickviewModal({ showModal, handleClose, slugData }) {
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const getProductDetails = () => {
     const dataString = {
-      slug: slugData
-    }
+      slug: slugData,
+      location: contextValues.currentLocation
+    };
     ApiService.postData("product-details", dataString).then((res) => {
       if (res.status == "success") {
         setAdminData(res.admin_data);
@@ -158,6 +159,7 @@ function QuickviewModal({ showModal, handleClose, slugData }) {
     const dataString = {
       variation: selvararray,
       product_id: productData.product_id,
+      location: contextValues.currentLocation
     };
 
     ApiService.postData("variation-wise-price", dataString).then((res) => {

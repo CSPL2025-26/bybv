@@ -14,7 +14,6 @@ import DataContext from "../Elements/context";
 import LoginModal from "../Elements/Modals/login_modal";
 import PopUPModal from "../Elements/Modals/pop_up_modal";
 import { useCallback } from "react";
-
 function Header() {
   const didMountRef = useRef(true);
   const contextValues = useContext(DataContext);
@@ -132,7 +131,6 @@ function Header() {
 
   useEffect(() => {
     if (didMountRef.current) {
-      getLocation()
       contextValues.setCartSummary(dataArray['CartSummary'])
       if (localStorage.getItem("USER_SESSION")) {
         cartSessionData();
@@ -146,42 +144,88 @@ function Header() {
     didMountRef.current = false;
   }, [getHeaderData, cartSessionData, getbannerData]);
 
+
+
   const loginModal = () => {
     contextValues.setToggleLoginModal(!contextValues.toggleLoginModal)
   }
- 
-  const [location, setLocation] = useState(null);
-  const [address, setAddress] = useState("");
+
+
+  const GOOGLE_API_KEY = "AIzaSyCJrkzyUKM6gAm585P3CNbim9rwMJPE6zU"; // <-- ADD YOUR API KEY
+
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [area, setArea] = useState("");
+  const [fullAddress, setFullAddress] = useState("");
   const [error, setError] = useState("");
 
-  const getLocation = () => {
+  // Default Jaipur Location
+  const defaultLat = 26.9124;
+  const defaultLng = 75.7873;
+
+  const saveLocation = (city, state, country, pincode) => {
+    localStorage.setItem(
+      "userLocation",
+      JSON.stringify({
+        city,
+        state,
+        country,
+        pincode
+      })
+    );
+  };
+
+  const reverseGeocode = async (lat, lng) => {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === "OK" && data.results.length > 0) {
+      const result = data.results[0];
+      const components = result.address_components;
+
+      let city = "";
+      let state = "";
+      let country = "";
+      let pincode = "";
+
+      components.forEach((comp) => {
+        if (comp.types.includes("locality")) city = comp.long_name;
+        if (comp.types.includes("administrative_area_level_1")) state = comp.long_name;
+        if (comp.types.includes("country")) country = comp.long_name;
+        if (comp.types.includes("postal_code")) pincode = comp.long_name;
+      });
+      // Save in localStorage
+      contextValues.saveLocation(city, state, country, pincode);
+      contextValues.setCurretnLocationLoader(true)
+    } else {
+      setError("Unable to fetch address");
+    }
+  };
+
+  const getLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      setError("Geolocation not supported!");
+      reverseGeocode(defaultLat, defaultLng);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        setLocation({ lat, lng });
-
-        // Reverse Geocode API
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
-        );
-
-        const data = await response.json(); 
-        if (data && data.display_name) {
-          setAddress(data.display_name);
-        } else {
-          setAddress("Unable to fetch address");
-        }
+      (pos) => {
+        reverseGeocode(pos.coords.latitude, pos.coords.longitude);
       },
-      (err) => setError(err.message)
+      () => {
+        reverseGeocode(defaultLat, defaultLng);
+      }
     );
-  };
+  }, []);
+
+  useEffect(() => {
+    getLocation();
+  }, [getLocation]);
+
 
   return (
     <>

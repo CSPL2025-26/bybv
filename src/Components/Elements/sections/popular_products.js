@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { ApiService } from "../../services/apiServices";
 import constants from "../../services/constants";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import QuickviewModal from "../Modals/quickview_modal";
-
+import DataContext from "../context";
 function Popularproducts() {
   const didMountRef = useRef(true);
+  const contextValues = useContext(DataContext);
   const [popularProductData, setPopularProductData] = useState([]);
   const [slugData, setSlugData] = useState();
 
@@ -24,25 +25,24 @@ function Popularproducts() {
     setShowModal(false);
   };
   useEffect(() => {
-    if (didMountRef.current) {
+    if (contextValues.curretnLocationLoader) {
       getCategoryWiseData();
     }
     didMountRef.current = false;
-  });
+  },[contextValues.curretnLocationLoader]);
 
-  const getCategoryWiseData = () => {
+  const getCategoryWiseData = async () => {
     setLoading(true);
-    ApiService.fetchData("featured-products-list").then((res) => {
-      if (res.status == "success") {
+
+    const payload = contextValues.currentLocation;
+
+    ApiService.postData("featured-products-list", payload).then((res) => {
+      if (res.status === "success") {
         setPopularProductData(res.products);
-        setLoading(false);
       }
+      setLoading(false);
     });
   };
-  let formatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
 
   return (
     <>
@@ -193,7 +193,7 @@ function Popularproducts() {
                                         </dt>
                                         <dd>
                                           <span className="price-item price-item--sale">
-                                            ₹{formatter.format(value.product_selling_price)}
+                                            ₹{Number(value.product_selling_price).toFixed(2)}
                                           </span>
                                         </dd>
                                         <dt className="price__compare">
@@ -203,24 +203,11 @@ function Popularproducts() {
                                         </dt>
                                         <dd className="price__compare">
                                           <span className="price-item price-item--regular">
-                                            MRP. ₹{formatter.format(value.product_price)}
+                                            MRP. ₹{Number(value.product_price).toFixed(2)}
                                           </span>
                                         </dd>
                                         <dd className="card__badge"></dd>
                                       </div>
-                                      <dl className="unit-price caption hidden">
-                                        <dt className="visually-hidden">
-                                          Unit price
-                                        </dt>
-                                        <dd>
-                                          <span></span>
-                                          <span aria-hidden="true">/</span>
-                                          <span className="visually-hidden">
-                                            &nbsp;per&nbsp;
-                                          </span>
-                                          <span></span>
-                                        </dd>
-                                      </dl>
                                     </dl>
                                   </div>
                                 </div>
@@ -233,7 +220,6 @@ function Popularproducts() {
                             </div>
                           </li>
                         </React.Fragment>
-
                       );
                     })}
                   </ul>
@@ -242,92 +228,86 @@ function Popularproducts() {
               </div>
             </section>
           </>
-        ) : 
-        
+        ) :
+
           loading == true ? (
-          <>
-            <section className="popular-products-section spaced-section">
-              <div className="popular-products">
-                <div className="section-header__line">
-                  <div className="container">
-                    <div className="section-header__item">
-                      {/* <div className="subtitle">best sellers</div> */}
-                      <div className="section-header__title__block">
-                        <h2 className="section-header__title title--section h2">
-                          Popular Products
-                        </h2>
-                        <a href="/collections/popular" className="button button--simple">
-                          <span className="button-simpl__label">View All</span>
-                        </a>
+            <>
+              <section className="popular-products-section spaced-section">
+                <div className="popular-products">
+                  <div className="section-header__line">
+                    <div className="container">
+                      <div className="section-header__item">
+                        {/* <div className="subtitle">best sellers</div> */}
+                        <div className="section-header__title__block">
+                          <h2 className="section-header__title title--section h2">
+                            Popular Products
+                          </h2>
+                          <a href="/collections/popular" className="button button--simple">
+                            <span className="button-simpl__label">View All</span>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="container">
-                  <ul className="popular-products__wrapper list-unstyled">
-                    {
-                      [...Array(4)].map((_, index) => {
-                        return (
-                          <React.Fragment key={index}>
-                            <li className="collection-product-card collection-popular-card quickview--hover show">
-                              <div className="card-wrapper  js-color-swatches-wrapper">
-                                <div className="card card--product" tabIndex={-1}>
-                                  <div className="card__inner full-unstyled-link">
-                                    <div
-                                      className="media media--transparent media--portrait media--hover-effect"
-                                      style={{ paddingBottom: "100%" }}
-                                    >
-                                      <Skeleton width={600} height={600} />
-                                    </div>
-                                    <div className="card-information">
-                                      <div className="card-information__wrapper">
-                                        <div className="caption-with-letter-spacing subtitle">
-                                          <Skeleton width={250} />
-                                        </div>
-                                        <h3 className="card__title h5">
-                                          <a
-                                            className="full-unstyled-link"
-                                            href={"/products/"}
-                                            title="BCAA+EAA - watermelon"
-                                          >
+                  <div className="container">
+                    <ul className="popular-products__wrapper list-unstyled">
+                      {
+                        [...Array(4)].map((_, index) => {
+                          return (
+                            <React.Fragment key={index}>
+                              <li className="collection-product-card collection-popular-card quickview--hover show">
+                                <div className="card-wrapper  js-color-swatches-wrapper">
+                                  <div className="card card--product" tabIndex={-1}>
+                                    <div className="card__inner full-unstyled-link">
+                                      <div
+                                        className="media media--transparent media--portrait media--hover-effect"
+                                        style={{ paddingBottom: "100%" }}
+                                      >
+                                        <Skeleton width={600} height={600} />
+                                      </div>
+                                      <div className="card-information">
+                                        <div className="card-information__wrapper">
+                                          <div className="caption-with-letter-spacing subtitle">
                                             <Skeleton width={250} />
-                                          </a>
-                                        </h3>
-                                        <div className="price  price--on-sale ">
-                                          <dl>
-                                            <div className="price__sale">
+                                          </div>
+                                          <h3 className="card__title h5">
+                                            <a
+                                              className="full-unstyled-link"
+                                              href={"/products/"}
+                                              title="BCAA+EAA - watermelon"
+                                            >
+                                              <Skeleton width={250} />
+                                            </a>
+                                          </h3>
+                                          <div className="price  price--on-sale ">
+                                            <dl>
+                                              <div className="price__sale">
 
-                                              <dd>
-                                                <span className="price-item price-item--sale">
-                                                  <Skeleton width={250} />
-                                                </span>
-                                              </dd>
-
-
-                                              <dd className="card__badge"></dd>
-                                            </div>
-
-                                          </dl>
+                                                <dd>
+                                                  <span className="price-item price-item--sale">
+                                                    <Skeleton width={250} />
+                                                  </span>
+                                                </dd>
+                                                <dd className="card__badge"></dd>
+                                              </div>
+                                            </dl>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </li>
-                          </React.Fragment>
-
-                        )
-                      })
-                    }
-
-                  </ul>
+                              </li>
+                            </React.Fragment>
+                          )
+                        })
+                      }
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </section>
-          </>
-        ):null
-        
+              </section>
+            </>
+          ) : null
         }
       </BrowserView>
 
@@ -480,7 +460,7 @@ function Popularproducts() {
                                         </dt>
                                         <dd>
                                           <span className="price-item price-item--sale">
-                                            ₹{formatter.format(value.product_selling_price)}
+                                            ₹{Number(value.product_selling_price).toFixed(2)}
                                           </span>
                                         </dd>
                                         <dt className="price__compare">
@@ -490,24 +470,11 @@ function Popularproducts() {
                                         </dt>
                                         <dd className="price__compare">
                                           <span className="price-item price-item--regular">
-                                            MRP. ₹{formatter.format(value.product_price)}
+                                            MRP. ₹{Number(value.product_price).toFixed(2)}
                                           </span>
                                         </dd>
                                         <dd className="card__badge"></dd>
                                       </div>
-                                      <dl className="unit-price caption hidden">
-                                        <dt className="visually-hidden">
-                                          Unit price
-                                        </dt>
-                                        <dd>
-                                          <span></span>
-                                          <span aria-hidden="true">/</span>
-                                          <span className="visually-hidden">
-                                            &nbsp;per&nbsp;
-                                          </span>
-                                          <span></span>
-                                        </dd>
-                                      </dl>
                                     </dl>
                                   </div>
                                 </div>
@@ -520,7 +487,6 @@ function Popularproducts() {
                             </div>
                           </li>
                         </React.Fragment>
-
                       );
                     })}
                   </ul>
@@ -559,17 +525,13 @@ function Popularproducts() {
                                         <div className="price  price--on-sale ">
                                           <dl>
                                             <div className="price__sale">
-
                                               <dd>
                                                 <span className="price-item price-item--sale">
                                                   <Skeleton width={250} />
                                                 </span>
                                               </dd>
-
-
                                               <dd className="card__badge"></dd>
                                             </div>
-
                                           </dl>
                                         </div>
                                       </div>
@@ -579,12 +541,9 @@ function Popularproducts() {
                               </div>
                             </li>
                           </React.Fragment>
-
-
                         )
                       })
                     }
-
                   </ul>
                 </>
               )}
