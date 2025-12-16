@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { ApiService } from '../../services/apiServices';
 import constants from '../../services/constants';
+import DataContext from '../context';
 
 function SearchModal({ searchModalActive, searchModalToggle }) {
+	const contextValues = useContext(DataContext);
 	const [searchdata, setsearchdata] = useState([]);
 	const [baseImg, setbaseImg] = useState("")
 	const [showcontent, setshowcontent] = useState(true)
@@ -21,23 +23,19 @@ function SearchModal({ searchModalActive, searchModalToggle }) {
 
 				}
 			})
-
 			getSliderData()
-
 		}
 		didMountRef.current = false;
 
 	}, [])
 
 	const getSliderData = () => {
-
-		ApiService.fetchData("/dashboard").then((res) => {
+		const payload = contextValues.currentLocation;
+		ApiService.postData("dashboard", payload).then((res) => {
 			if (res.status == "success") {
 				setSliderData(res?.homeSearchSliderData);
 				setSliderCategoryData(res?.homeSearchSliderData.category);
-
 				setSliderImagePath(res.slider_img_path);
-
 			}
 		});
 	};
@@ -158,20 +156,23 @@ function SearchModal({ searchModalActive, searchModalToggle }) {
 
 
 						</> : ""}
-
-						<div id='searchcard' className='search-modal__colection color-background-4'>
-							<a className="card-wrapper__link--overlay collection-grid__link" href={`/collections/category/${sliderCategoryData?.cat_slug}`}></a>
-							<div className='collection-grid__item'>
-								<div className='collection-grid__image-wrapper'>
-									<div className='collection-grid__image-block'>
-										<h3 className="collection-grid__title "><a className="full-unstyled-link" href="#">{sliderCategoryData?.cat_name}</a></h3>
-										<div className='collection-grid__image-item'>
-											<img src={sliderData?.slider_image != null ? sliderImagePath + sliderData?.slider_image : constants.DEFAULT_IMAGE} sizes='100vw' style={{ objectFit: 'cover' }} alt='slider_image'></img>
+						{sliderData && sliderData.category ?
+							<div id='searchcard' className='search-modal__colection color-background-4'>
+								<a className="card-wrapper__link--overlay collection-grid__link" href={`/collections/category/${sliderCategoryData?.cat_slug}`}></a>
+								<div className='collection-grid__item'>
+									<div className='collection-grid__image-wrapper'>
+										<div className='collection-grid__image-block'>
+											<h3 className="collection-grid__title "><a className="full-unstyled-link" href="#">{sliderCategoryData?.cat_name}</a></h3>
+											{sliderData && sliderData?.slider_image ?
+												<div className='collection-grid__image-item'>
+													<img src={sliderData?.slider_image != null ? sliderImagePath + sliderData?.slider_image : constants.DEFAULT_IMAGE} sizes='100vw' style={{ objectFit: 'cover' }} alt='slider_image'></img>
+												</div>
+												: null}
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
+							: null}
 						<button type="button" className="search-modal__close modal__close-button link focus-inset modal-close-button" onClick={searchModalToggle}>
 							<svg aria-hidden="true" focusable="false" className="icon icon-close" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<path d="M2 2L26 26" stroke="currentColor" strokeWidth="3.3"></path>
@@ -191,7 +192,6 @@ function SearchModal({ searchModalActive, searchModalToggle }) {
 				</div>
 			</div>
 			<div className={`search-modal__mask color-inverse${searchModalActive ? ' active' : ''}`} onClick={searchModalToggle}></div>
-
 		</>
 	)
 }

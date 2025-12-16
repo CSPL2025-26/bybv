@@ -30,11 +30,11 @@ function RecommendedProduct() {
 
 
   useEffect(() => {
-    if (didMountRef.current) {
+    if (contextValues.currentLocation) {
       getRecomProduct()
     }
     didMountRef.current = false
-  })
+  },[contextValues.currentLocation])
 
   const getRecomProduct = () => {
     setLoading(true)

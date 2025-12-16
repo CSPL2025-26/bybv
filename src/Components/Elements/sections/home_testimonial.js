@@ -26,11 +26,11 @@ function HomeTestimonial() {
   }
 
   useEffect(() => {
-    if (didMountRef.current) {
+    if (contextValues.currentLocation) {
       getTestimonialData()
     }
     didMountRef.current = false
-  }, [])
+  }, [contextValues.currentLocation])
 
   const getTestimonialData = () => {
     setLoading(true)

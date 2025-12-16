@@ -35,11 +35,11 @@ function TagProducts() {
   });
 
   useEffect(() => {
-    if (didMountRef.current) {
+    if (contextValues.currentLocation) {
       getTagProduct();
     }
     didMountRef.current = false;
-  }, [getTagProduct]);
+  }, [contextValues.currentLocation]);
 
   let formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,

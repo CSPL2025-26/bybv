@@ -97,7 +97,9 @@ function Header() {
   });
 
   const getbannerData = useCallback(() => {
-    ApiService.fetchData("popup-banner").then((res) => {
+    const payload = contextValues.currentLocation;
+
+    ApiService.postData("popup-banner", payload).then((res) => {
       if (res.status === "success") {
         setpopupbannerdata(res.popupSliderData);
         setImageUrl(res.slider_img_path);

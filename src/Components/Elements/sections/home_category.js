@@ -24,11 +24,11 @@ function HomeCategory() {
   }
 
   useEffect(() => {
-    if (didMountRef.current) {
+    if (contextValues.currentLocation) {
       getCategoryWiseData();
     }
     didMountRef.current = false;
-  }, []);
+  }, [contextValues.currentLocation]);
 
   const getCategoryWiseData = () => {
     setLoading(true);

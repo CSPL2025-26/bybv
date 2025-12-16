@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Header from "../../Components/Header";
 import Footer from "../../Components/Footer";
 import { ApiService } from "../../Components/services/apiServices";
@@ -12,8 +12,10 @@ import QuickviewModal from "../../Components/Elements/Modals/quickview_modal";
 import FilterModal from "../../Components/Elements/Modals/filter_modal";
 import constants from "../../Components/services/constants";
 import { Helmet } from "react-helmet";
+import DataContext from "../../Components/Elements/context";
 
 function Collections() {
+	const contextValues = useContext(DataContext)
 	const { type, slug } = useParams();
 	const navigate = useNavigate()
 	const didMountRef = useRef(true);
@@ -102,6 +104,7 @@ function Collections() {
 			slug: selectedItems.length > 0 ? selectedItems[0] : slug,
 			type: selectedItems.length > 0 ? "category" : type,
 			sort_filter: sortfilter,
+			location: contextValues.currentLocation
 		}
 		
 		ApiService.postData('product-list', dataString).then((res) => {
