@@ -61,6 +61,7 @@ function Checkout() {
   const cartSessionData = () => {
     const dataString = {
       coupon_session: localStorage.getItem("COUPON_SESSION"),
+      ua_id: AddressSession.ua_id,
     };
     ApiService.postData("cartSessionData", dataString).then((res) => {
       if (res.data.status === "success") {
@@ -68,7 +69,6 @@ function Checkout() {
         contextValues.setcartCount(res.data.resCartData.length)
         contextValues.setCartSummary(res.data.cartSummary)
         getSettingsData(res.data.cartSummary, res.data.resCartData)
-
       }
     });
   }
