@@ -180,7 +180,7 @@ function Header() {
   };
 
   const reverseGeocode = async (lat, lng) => {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=en&key=${GOOGLE_API_KEY}`;
 
     const response = await fetch(url);
     const data = await response.json();

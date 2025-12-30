@@ -1,5 +1,5 @@
-const API_URL = 'https://studykee.com/projects/bybv/api/'
-// const API_URL = 'https://bybv.in/csadmin/api/'
+//const API_URL = 'https://studykee.com/projects/bybv/api/'
+const API_URL = 'https://bybv.in/csadmin/api/'
 
 
 const BASE_URL =   ""
