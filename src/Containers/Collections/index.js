@@ -24,9 +24,9 @@ function Collections() {
 	const [productcount, setproductcount] = useState("")
 	const [show, setShow] = useState(false);
 	const [sortfilter, setsortfilter] = useState("");
-	const [categoryId,setCategoryId]=useState("")
+	const [categoryId, setCategoryId] = useState("")
 	const [selectedItems, setSelectedItems] = useState([]);
-	const [maxpricecount,setmaxpricecount]=useState()
+	const [maxpricecount, setmaxpricecount] = useState()
 	const [multipleselectitem, setmultipleselectitem] = useState([])
 	const [productCategory, setProductCategory] = useState("");
 	const [categoryImagePath, setCategoryImagePath] = useState("");
@@ -37,9 +37,9 @@ function Collections() {
 	const [slugData, setSlugData] = useState()
 	const [filterModalActive, setfilterModalActive] = useState(false);
 	const [isExpanded, setIsExpanded] = useState(false);
-	const MAX_LENGTH = 300; 
+	const MAX_LENGTH = 300;
 	const description = productCategory?.cat_desc ?? '';
-  
+
 	const truncatedDescription = isExpanded ? description : `${description.slice(0, MAX_LENGTH)}...`;
 
 	const handleShowQuickModal = (slug) => {
@@ -73,19 +73,18 @@ function Collections() {
 			})
 		}
 		didMountRef.current = false;
-		
+
 		if (multipleselectitem?.length > 0 || Prizerange?.maxvalue !== "" || Prizerange?.minvalue !== "") {
 			setProductData([])
 			setproductcount("")
 			setProductCategory("")
 			filterProductlist()
+		} else {
+			if (contextValues.curretnLocationLoader) {
+				getProductList()
+			}
 		}
-		else{
-			getProductList()
-		}
-
-
-	}, [sortfilter, selectedItems, Prizerange, multipleselectitem])
+	}, [sortfilter, selectedItems, Prizerange, multipleselectitem, contextValues.curretnLocationLoader])
 
 
 	const capitalizeFirstLetter = (string) => {
@@ -106,9 +105,9 @@ function Collections() {
 			sort_filter: sortfilter,
 			location: contextValues.currentLocation
 		}
-		
+
 		ApiService.postData('product-list', dataString).then((res) => {
-			
+
 			if (res.status == "success") {
 				setmaxpricecount(res?.maxProductPrice)
 				setProductData(res?.products)
@@ -122,12 +121,12 @@ function Collections() {
 	}
 	const filterProductlist = () => {
 		const dataString = {
-			priceRange :{0:Prizerange?.minvalue,1:Prizerange?.maxvalue},
-			filterarray:multipleselectitem?.length>0?multipleselectitem:[categoryId],
+			priceRange: { 0: Prizerange?.minvalue, 1: Prizerange?.maxvalue },
+			filterarray: multipleselectitem?.length > 0 ? multipleselectitem : [categoryId],
+			location: contextValues.currentLocation
 		}
 
 		ApiService.postData('getfilterproductsdata ', dataString).then((res) => {
-			
 			if (res.status == "success") {
 				setProductData(res?.products)
 				setproductcount(res?.totalProductCount)
@@ -144,52 +143,52 @@ function Collections() {
 		maximumFractionDigits: 2,
 	});
 
-	const receiveDataFromChild = (catedata,minvalue,maxvalue,categoryid) => {
+	const receiveDataFromChild = (catedata, minvalue, maxvalue, categoryid) => {
 		setmultipleselectitem(catedata)
 		setCategoryId(categoryid)
 		// if(catedata?.length>0){
-			
-		// }
-		
-		setPrizerange({minvalue:minvalue,maxvalue:maxvalue})
 
-	  };
+		// }
+
+		setPrizerange({ minvalue: minvalue, maxvalue: maxvalue })
+
+	};
 
 
 	return (
 		<>
-		     <Helmet>
-        <title>{productCategory?.cat_meta_title != null ? productCategory.cat_meta_title : "ByBv"}</title>
-        <meta name="description" itemprop="description" content={productCategory?.cat_meta_desc != null ? productCategory?.cat_meta_desc : "ByBv"} />
-        {productCategory?.cat_meta_keyword != null ? <meta name="keywords" content={productCategory?.cat_meta_keyword} /> : "ByBv"}
-        <link rel="canonical" href={window.location.href} />
-        <meta property="og:title" content={productCategory?.cat_meta_title != null ? productCategory?.cat_meta_title : "ByBv"} />
-        <meta name="twitter:url" content={window.location.href} />
+			<Helmet>
+				<title>{productCategory?.cat_meta_title != null ? productCategory.cat_meta_title : "ByBv"}</title>
+				<meta name="description" itemprop="description" content={productCategory?.cat_meta_desc != null ? productCategory?.cat_meta_desc : "ByBv"} />
+				{productCategory?.cat_meta_keyword != null ? <meta name="keywords" content={productCategory?.cat_meta_keyword} /> : "ByBv"}
+				<link rel="canonical" href={window.location.href} />
+				<meta property="og:title" content={productCategory?.cat_meta_title != null ? productCategory?.cat_meta_title : "ByBv"} />
+				<meta name="twitter:url" content={window.location.href} />
 
-        <meta
-          property="og:image"
-          content={constants.FRONT_URL + 'img/logo.png'}
-        />
+				<meta
+					property="og:image"
+					content={constants.FRONT_URL + 'img/logo.png'}
+				/>
 
-        <meta property="og:url" content={window.location.href} />
-        {productCategory?.cat_meta_desc != null ? (
-          <meta property="og:description" content={productCategory?.cat_meta_desc} />
-        ) : (
-          <meta property="og:description" content="ByBv" />
-        )}
+				<meta property="og:url" content={window.location.href} />
+				{productCategory?.cat_meta_desc != null ? (
+					<meta property="og:description" content={productCategory?.cat_meta_desc} />
+				) : (
+					<meta property="og:description" content="ByBv" />
+				)}
 
-        <meta name="twitter:title" content={productCategory?.cat_meta_title != null ? productCategory.cat_meta_title : "ByBv"} />
-        {productCategory?.cat_meta_desc != null ? (
-          <meta property="twitter:description" content={productCategory?.cat_meta_desc} />
-        ) : (
-          <meta property="twitter:description" content="ByBv" />
-        )}
+				<meta name="twitter:title" content={productCategory?.cat_meta_title != null ? productCategory.cat_meta_title : "ByBv"} />
+				{productCategory?.cat_meta_desc != null ? (
+					<meta property="twitter:description" content={productCategory?.cat_meta_desc} />
+				) : (
+					<meta property="twitter:description" content="ByBv" />
+				)}
 
-        <meta
-          property="twitter:image"
-          content={constants.FRONT_URL + 'img/logo.png'}
-        />
-      </Helmet>
+				<meta
+					property="twitter:image"
+					content={constants.FRONT_URL + 'img/logo.png'}
+				/>
+			</Helmet>
 			<Header />
 			<BrowserView>
 				{Productcat.length > 0 ?
@@ -222,16 +221,16 @@ function Collections() {
 											<div className="collection-banner__text">
 												{productCategory && productCategory.cat_name != null ? <h1 className="collection-banner__title">{productCategory.cat_name}</h1>
 													: null}
-													
-													<div className={`banner_description ${isExpanded ? 'banner_description_scroll' : ''}`} dangerouslySetInnerHTML={{ __html: truncatedDescription }}></div>
-													{description.length > MAX_LENGTH && (
-														<button onClick={() => setIsExpanded(!isExpanded)}
+
+												<div className={`banner_description ${isExpanded ? 'banner_description_scroll' : ''}`} dangerouslySetInnerHTML={{ __html: truncatedDescription }}></div>
+												{description.length > MAX_LENGTH && (
+													<button onClick={() => setIsExpanded(!isExpanded)}
 														className="button button--primary"
-										>
+													>
 														{isExpanded ? 'Read Less' : 'Read More'}
-														</button>
-													)}
-													{/* {productCategory && productCategory.cat_desc != null ? <p>{productCategory.cat_desc}</p>: null} */}
+													</button>
+												)}
+												{/* {productCategory && productCategory.cat_desc != null ? <p>{productCategory.cat_desc}</p>: null} */}
 											</div>
 										</div>
 									</div>
@@ -373,7 +372,7 @@ function Collections() {
 													<div className="card card--product" tabIndex={-1}>
 														<div className="card__inner full-unstyled-link">
 															<div className="media media--transparent media--portrait media--hover-effect" style={{ paddingBottom: '120%' }}>
-															{/* {value.product_label_name && value.product_label_name !== "" && value.product_label_color ? (
+																{/* {value.product_label_name && value.product_label_name !== "" && value.product_label_color ? (
 															<div className="product-label-group">
 																{value.product_label_name
 																.split(", ")
@@ -398,8 +397,8 @@ function Collections() {
 																)}
 															</div>
 
-												
-							
+
+
 															<div className="quick-add no-js-hidden">
 																<button type="button" name="add" className="card__link button button--primary button--full-width"
 																	onClick={() => handleShowQuickModal(value.product_slug)}
@@ -426,7 +425,7 @@ function Collections() {
 													<div className="card-information" key={index}>
 														<div className="card-information__wrapper">
 															<div className="caption-with-letter-spacing subtitle">{value?.product_category_name}</div>
-															<h3 className="card__title h5"><a className="full-unstyled-link" href={"/products/" + value.product_slug}  title="">{value?.product_name}</a></h3>
+															<h3 className="card__title h5"><a className="full-unstyled-link" href={"/products/" + value.product_slug} title="">{value?.product_name}</a></h3>
 															<div className="price  price--on-sale ">
 																<dl>
 																	<div className="price__sale">
@@ -736,14 +735,14 @@ function Collections() {
 											<div className="collection-banner__text">
 												{productCategory && productCategory.cat_name != null ? <h1 className="collection-banner__title">{productCategory.cat_name}</h1>
 													: null}
-                                        <div className={`banner_description ${isExpanded ? 'banner_description_scroll' : ''}`} dangerouslySetInnerHTML={{ __html: truncatedDescription }}></div>
-													{description.length > MAX_LENGTH && (
-														<button onClick={() => setIsExpanded(!isExpanded)}
+												<div className={`banner_description ${isExpanded ? 'banner_description_scroll' : ''}`} dangerouslySetInnerHTML={{ __html: truncatedDescription }}></div>
+												{description.length > MAX_LENGTH && (
+													<button onClick={() => setIsExpanded(!isExpanded)}
 														className="button button--primary"
-										>
+													>
 														{isExpanded ? 'Read Less' : 'Read More'}
-														</button>
-													)}
+													</button>
+												)}
 											</div>
 										</div>
 									</div>
@@ -917,7 +916,7 @@ function Collections() {
 														<div className="card-information" key={index}>
 															<div className="card-information__wrapper">
 																<div className="caption-with-letter-spacing subtitle">{value.product_category_name}</div>
-																<h3 className="card__title h5"><a className="full-unstyled-link" href={"/products/" + value.product_slug}  title="">{value.product_name}</a></h3>
+																<h3 className="card__title h5"><a className="full-unstyled-link" href={"/products/" + value.product_slug} title="">{value.product_name}</a></h3>
 																<div className="price  price--on-sale ">
 																	<dl>
 																		<div className="price__sale">
@@ -966,12 +965,12 @@ function Collections() {
 							</section>
 						</> :
 						<>
-						{/* skeleton start */}
-						{
-							loading1 == true ? <>
-								<section className="collection-grid-section">
-									<div className="facets__main">
-										{/* <div id="open_filters_menu" className={`${filterModalActive ? 'show_menu' : ''}`}>
+							{/* skeleton start */}
+							{
+								loading1 == true ? <>
+									<section className="collection-grid-section">
+										<div className="facets__main">
+											{/* <div id="open_filters_menu" className={`${filterModalActive ? 'show_menu' : ''}`}>
 									<a href="javascript:void(0)" className="form-menu__mask no_submit" onClick={filterModalToggle}></a>
 									<div className="facets-menu">
 										<a href="javascript:void(0)" className="facets-menu__close no_submit" onClick={filterModalToggle}>
@@ -983,207 +982,207 @@ function Collections() {
 										</a>
 									</div>
 								</div> */}
-										<div>
-											<facet-filters-form>
+											<div>
+												<facet-filters-form>
 
-												<div className="container type-filter__container">
-													<ul className="type-filter__list">
-														{[...Array(3)].map((items, index) => {
-															return (<>
-																<li
-																	key={index}
-																	onClick={(e) => handleCheckboxChange(e, index)}
-																// onClick={() => { navigate(`/products/${items?.cat_slug}`) }}
-																>
-																	<label className="type-filter__label" >
-																		<input type="checkbox" name="filter.p.product_type" value="accessories" className="type-filter__input" />
-																		<span className="type-filter__title h4"><Skeleton width={150} /></span>
-																	</label>
-																</li>
-															</>)
-														})}
-													</ul>
-												</div>
-
-												<div className="facets">
-													<div className="container">
-														<div className="facets__wrapper">
-															<a className="button open_filters no_submit" onClick={filterModalToggle}>
-																<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M12.75 16.125H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M20.25 16.125H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M6.75 7.875H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M20.25 7.875H9.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path className="animate-in-hover animate-right" d="M9.75 5.625V10.125" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path className="animate-in-hover animate-left" d="M15.75 18.375V13.875" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																</svg>
-																<Skeleton width={150} />
-															</a>
-															<div className="facets__product-count"><Skeleton width={150} /></div>
-															<div className="facets__sort-by">
-																<div className="facets__select-label"><Skeleton width={150} /></div>
-																<select name="sort_by" className="select__sort_by" id="SortBy" aria-describedby="a11y-refresh-page-message" onChange={(e) => { setsortfilter(e.target.value) }}>
-																	<option value=""><Skeleton width={150} /> </option>
-																	<option value="1"><Skeleton width={150} /></option>
-																	<option value="2"><Skeleton width={150} /></option>
-																	<option value="3"><Skeleton width={150} /></option>
-																	<option value="4"><Skeleton width={150} /></option>
-																	<option value="5"><Skeleton width={150} /></option>
-																	<option value="6"><Skeleton width={150} /></option>
-																</select>
-																<svg className="icon icon-filter-two" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M10 1.5L6 5.5L2 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
-																</svg>
-															</div>
-														</div>
-													</div>
-												</div>
-											</facet-filters-form>
-										</div>
-									</div>
-									<div className="collection__main-wrapper">
-										<div className="collection collection-product container">
-											<div className="collection-product-list load-more-grid">
-												{[...Array(9)].map((_, index) => (
-													<div className="collection-product-card quickview--hover" key={index}>
-														<div className="card-wrapper js-color-swatches-wrapper">
-															<div className="card card--product" tabIndex={-1}>
-																<div className="card__inner full-unstyled-link">
-																	<div className="media media--transparent media--portrait media--hover-effect" style={{ paddingBottom: '50%' }}>
-																		<Skeleton width='100%' height={600} />
-																	</div>
-																</div>
-															</div>
-															<div className="card-information" key={index}>
-																<div className="card-information__wrapper">
-																	<div className="caption-with-letter-spacing subtitle"><Skeleton width={150} /></div>
-																	<h3 className="card__title h5"><a className="full-unstyled-link" href="#" title=""><Skeleton width={150} /></a></h3>
-																	<div className="price  price--on-sale ">
-																		<dl>
-																			<div className="price__sale">
-																				<dt>
-																					<span className="visually-hidden visually-hidden--inline"><Skeleton width={150} /></span>
-																				</dt>
-																				<dd>
-																					<span className="price-item price-item--sale">
-																						<Skeleton width={150} />
-																					</span>
-																				</dd>
-																				<dt className="price__compare">
-																					<span className="visually-hidden visually-hidden--inline"><Skeleton width={150} /></span>
-																				</dt>
-																				<dd className="price__compare">
-																					<span className="price-item price-item--regular">
-																					</span>
-																				</dd>
-																				<dd className="card__badge">
-																				</dd>
-																			</div>
-																		</dl>
-																	</div>
-																</div>
-															</div>
-															<a href={"/products/"} className="link link--overlay card-wrapper__link--overlay js-color-swatches-link" aria-label="Product link"></a>
-														</div>
-													</div>
-												))}
-											</div>
-										</div>
-									</div>
-								</section>
-							</> : <>
-								<section className="spaced-section collection-grid-section">
-									<div className="facets__main">
-										<div id="open_filters_menu" className={`${filterModalActive ? 'show_menu' : ''}`}>
-											<a href="javascript:void(0)" className="form-menu__mask no_submit" onClick={filterModalToggle}></a>
-											<div className="facets-menu">
-												<a href="javascript:void(0)" className="facets-menu__close no_submit" onClick={filterModalToggle}>
-													<svg aria-hidden="true" focusable="false" className="icon icon-close" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path d="M2 2L26 26" stroke="currentColor" strokeWidth="3.3"></path>
-														<path d="M26 2L2 26" stroke="currentColor" strokeWidth="3.3"></path>
-													</svg>
-
-												</a>
-											</div>
-										</div>
-										<div>
-											<facet-filters-form>
-												{Productcat?.length > 0 ? <>
 													<div className="container type-filter__container">
 														<ul className="type-filter__list">
-															{Productcat?.map((items, index) => {
+															{[...Array(3)].map((items, index) => {
 																return (<>
 																	<li
-																		key={items.cat_id}
-																		onClick={(e) => handleCheckboxChange(e, items.cat_slug)}
-																	// style={{
-																	// 	backgroundColor: selectedItems.includes(items.cat_id) ? 'yellow' : 'transparent',
-																	// }}
-
+																		key={index}
+																		onClick={(e) => handleCheckboxChange(e, index)}
 																	// onClick={() => { navigate(`/products/${items?.cat_slug}`) }}
-
-
 																	>
 																		<label className="type-filter__label" >
 																			<input type="checkbox" name="filter.p.product_type" value="accessories" className="type-filter__input" />
-																			<span className="type-filter__title h4">{items?.cat_name}</span>
+																			<span className="type-filter__title h4"><Skeleton width={150} /></span>
 																		</label>
 																	</li>
 																</>)
 															})}
 														</ul>
 													</div>
-												</> : ""}
-												<div className="facets">
-													<div className="container">
-														<div className="facets__wrapper">
-															<a className="button open_filters no_submit" onClick={filterModalToggle}>
-																<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M12.75 16.125H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M20.25 16.125H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M6.75 7.875H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path d="M20.25 7.875H9.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path className="animate-in-hover animate-right" d="M9.75 5.625V10.125" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																	<path className="animate-in-hover animate-left" d="M15.75 18.375V13.875" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
-																</svg>
-																Filter
-															</a>
-															<div className="facets__product-count">Showing {productData?.length} of {productcount !== "" ? productcount : 0} products</div>
-															<div className="facets__sort-by">
-																<div className="facets__select-label">Sort by:</div>
-																<select name="sort_by" className="select__sort_by" id="SortBy" aria-describedby="a11y-refresh-page-message" onChange={(e) => { setsortfilter(e.target.value) }}>
-																	<option value="">Select </option>
-																	<option value="1">Featured</option>
-																	<option value="2">Best Selling</option>
-																	<option value="3">Price-High to Low</option>
-																	<option value="4">Price-Low to High</option>
-																	<option value="5">Date-Old to New</option>
-																	<option value="6">Date-New to Old</option>
 
-																</select>
-																<svg className="icon icon-filter-two" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path d="M10 1.5L6 5.5L2 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
-																</svg>
+													<div className="facets">
+														<div className="container">
+															<div className="facets__wrapper">
+																<a className="button open_filters no_submit" onClick={filterModalToggle}>
+																	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M12.75 16.125H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M20.25 16.125H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M6.75 7.875H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M20.25 7.875H9.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path className="animate-in-hover animate-right" d="M9.75 5.625V10.125" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path className="animate-in-hover animate-left" d="M15.75 18.375V13.875" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																	</svg>
+																	<Skeleton width={150} />
+																</a>
+																<div className="facets__product-count"><Skeleton width={150} /></div>
+																<div className="facets__sort-by">
+																	<div className="facets__select-label"><Skeleton width={150} /></div>
+																	<select name="sort_by" className="select__sort_by" id="SortBy" aria-describedby="a11y-refresh-page-message" onChange={(e) => { setsortfilter(e.target.value) }}>
+																		<option value=""><Skeleton width={150} /> </option>
+																		<option value="1"><Skeleton width={150} /></option>
+																		<option value="2"><Skeleton width={150} /></option>
+																		<option value="3"><Skeleton width={150} /></option>
+																		<option value="4"><Skeleton width={150} /></option>
+																		<option value="5"><Skeleton width={150} /></option>
+																		<option value="6"><Skeleton width={150} /></option>
+																	</select>
+																	<svg className="icon icon-filter-two" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M10 1.5L6 5.5L2 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
+																	</svg>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-											</facet-filters-form>
-										</div>
-									</div>
-									<div className="container mb-5">
-										<div className="row">
-											<div className="col">
-												<h4 className="text-center">No Result Found</h4>
+												</facet-filters-form>
 											</div>
 										</div>
-									</div>
-								</section>
+										<div className="collection__main-wrapper">
+											<div className="collection collection-product container">
+												<div className="collection-product-list load-more-grid">
+													{[...Array(9)].map((_, index) => (
+														<div className="collection-product-card quickview--hover" key={index}>
+															<div className="card-wrapper js-color-swatches-wrapper">
+																<div className="card card--product" tabIndex={-1}>
+																	<div className="card__inner full-unstyled-link">
+																		<div className="media media--transparent media--portrait media--hover-effect" style={{ paddingBottom: '50%' }}>
+																			<Skeleton width='100%' height={600} />
+																		</div>
+																	</div>
+																</div>
+																<div className="card-information" key={index}>
+																	<div className="card-information__wrapper">
+																		<div className="caption-with-letter-spacing subtitle"><Skeleton width={150} /></div>
+																		<h3 className="card__title h5"><a className="full-unstyled-link" href="#" title=""><Skeleton width={150} /></a></h3>
+																		<div className="price  price--on-sale ">
+																			<dl>
+																				<div className="price__sale">
+																					<dt>
+																						<span className="visually-hidden visually-hidden--inline"><Skeleton width={150} /></span>
+																					</dt>
+																					<dd>
+																						<span className="price-item price-item--sale">
+																							<Skeleton width={150} />
+																						</span>
+																					</dd>
+																					<dt className="price__compare">
+																						<span className="visually-hidden visually-hidden--inline"><Skeleton width={150} /></span>
+																					</dt>
+																					<dd className="price__compare">
+																						<span className="price-item price-item--regular">
+																						</span>
+																					</dd>
+																					<dd className="card__badge">
+																					</dd>
+																				</div>
+																			</dl>
+																		</div>
+																	</div>
+																</div>
+																<a href={"/products/"} className="link link--overlay card-wrapper__link--overlay js-color-swatches-link" aria-label="Product link"></a>
+															</div>
+														</div>
+													))}
+												</div>
+											</div>
+										</div>
+									</section>
+								</> : <>
+									<section className="spaced-section collection-grid-section">
+										<div className="facets__main">
+											<div id="open_filters_menu" className={`${filterModalActive ? 'show_menu' : ''}`}>
+												<a href="javascript:void(0)" className="form-menu__mask no_submit" onClick={filterModalToggle}></a>
+												<div className="facets-menu">
+													<a href="javascript:void(0)" className="facets-menu__close no_submit" onClick={filterModalToggle}>
+														<svg aria-hidden="true" focusable="false" className="icon icon-close" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+															<path d="M2 2L26 26" stroke="currentColor" strokeWidth="3.3"></path>
+															<path d="M26 2L2 26" stroke="currentColor" strokeWidth="3.3"></path>
+														</svg>
 
-							</>
-						}
-						{/* skeleton start */}
-					</>
+													</a>
+												</div>
+											</div>
+											<div>
+												<facet-filters-form>
+													{Productcat?.length > 0 ? <>
+														<div className="container type-filter__container">
+															<ul className="type-filter__list">
+																{Productcat?.map((items, index) => {
+																	return (<>
+																		<li
+																			key={items.cat_id}
+																			onClick={(e) => handleCheckboxChange(e, items.cat_slug)}
+																		// style={{
+																		// 	backgroundColor: selectedItems.includes(items.cat_id) ? 'yellow' : 'transparent',
+																		// }}
+
+																		// onClick={() => { navigate(`/products/${items?.cat_slug}`) }}
+
+
+																		>
+																			<label className="type-filter__label" >
+																				<input type="checkbox" name="filter.p.product_type" value="accessories" className="type-filter__input" />
+																				<span className="type-filter__title h4">{items?.cat_name}</span>
+																			</label>
+																		</li>
+																	</>)
+																})}
+															</ul>
+														</div>
+													</> : ""}
+													<div className="facets">
+														<div className="container">
+															<div className="facets__wrapper">
+																<a className="button open_filters no_submit" onClick={filterModalToggle}>
+																	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M12.75 16.125H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M20.25 16.125H15.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M6.75 7.875H3.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path d="M20.25 7.875H9.75" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path className="animate-in-hover animate-right" d="M9.75 5.625V10.125" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																		<path className="animate-in-hover animate-left" d="M15.75 18.375V13.875" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path>
+																	</svg>
+																	Filter
+																</a>
+																<div className="facets__product-count">Showing {productData?.length} of {productcount !== "" ? productcount : 0} products</div>
+																<div className="facets__sort-by">
+																	<div className="facets__select-label">Sort by:</div>
+																	<select name="sort_by" className="select__sort_by" id="SortBy" aria-describedby="a11y-refresh-page-message" onChange={(e) => { setsortfilter(e.target.value) }}>
+																		<option value="">Select </option>
+																		<option value="1">Featured</option>
+																		<option value="2">Best Selling</option>
+																		<option value="3">Price-High to Low</option>
+																		<option value="4">Price-Low to High</option>
+																		<option value="5">Date-Old to New</option>
+																		<option value="6">Date-New to Old</option>
+
+																	</select>
+																	<svg className="icon icon-filter-two" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<path d="M10 1.5L6 5.5L2 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
+																	</svg>
+																</div>
+															</div>
+														</div>
+													</div>
+												</facet-filters-form>
+											</div>
+										</div>
+										<div className="container mb-5">
+											<div className="row">
+												<div className="col">
+													<h4 className="text-center">No Result Found</h4>
+												</div>
+											</div>
+										</div>
+									</section>
+
+								</>
+							}
+							{/* skeleton start */}
+						</>
 				}
 			</MobileView>
 			<Footer />
