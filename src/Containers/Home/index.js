@@ -87,6 +87,7 @@ function Home() {
       <TopSlider />
       <ProductsVedio></ProductsVedio>
       <Popularproducts />
+      <img src='/img/4599.png' width='100%' alt='ourmission_image'></img>
       <Category />
       <TagProducts />
       <CrazyDealsProducts />
@@ -97,8 +98,8 @@ function Home() {
       <HomeTestimonial />
       <HomeBlogs />
       <HomeFaq />
-      <Footer /> 
-    </> 
+      <Footer />
+    </>
   )
 }
 
