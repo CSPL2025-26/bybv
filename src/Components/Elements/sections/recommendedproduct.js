@@ -34,7 +34,7 @@ function RecommendedProduct() {
       getRecomProduct()
     }
     didMountRef.current = false
-  },[contextValues.currentLocation])
+  }, [contextValues.currentLocation])
 
   const getRecomProduct = () => {
     setLoading(true)
@@ -214,11 +214,21 @@ function RecommendedProduct() {
                                               <a className="full-unstyled-link" href="#" title="Whey protein isolate Max - Mango">
                                                 {value.product_name}</a>
                                             </h3>
-                                            <div className='price  price--on-sale'>
+                                            <div className="price price--on-sale">
                                               <dl>
-                                                <div className='price__sale'>
-                                                  <dd><span className="price-item price-item--sale">₹{formatter.format(value.product_selling_price)}</span></dd>
-                                                  <dd className="price__compare"><span className="price-item price-item--regular">MRP. ₹{formatter.format(value.product_price)}</span></dd>
+                                                <div className="price__sale">
+                                                  {(() => {
+                                                    const mrp = Number(value.product_price);
+                                                    const selling = Number(value.product_selling_price);
+                                                    const discount = mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                                                    return (
+                                                      <>
+                                                        <dd><span className="price-item price-item--sale">₹{selling.toFixed(2)}</span></dd>
+                                                        <dd className="price__compare"><span className="price-item price-item--regular">MRP. ₹{mrp.toFixed(2)}</span></dd>
+                                                        {discount > 0 && (<span className="price_discount">{discount}% Off</span>)}
+                                                      </>
+                                                    );
+                                                  })()}
                                                 </div>
                                               </dl>
                                             </div>

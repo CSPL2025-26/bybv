@@ -7735,6 +7735,10 @@ flex-wrap: wrap;
 display: flex;
 align-items: center;
 }
+.price_discount{
+    color: #33ac3b;
+    font-weight: 600;
+}
 .price--center {
 display: flex;
 justify-content: center;

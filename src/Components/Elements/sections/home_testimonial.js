@@ -253,14 +253,39 @@ function HomeTestimonial() {
                                           <a className="full-unstyled-link" href={`/products/${value?.product_slug}`} title="Sandalwood Beard Oil">
                                             {value?.product_name}</a>
                                         </h3>
-                                        <div className='price  price--on-sale'>
-                                          <dl>
-                                            <div className='price__sale'>
-                                              <dd><span className="price-item price-item--sale">₹{formatter.format(value?.product_selling_price)}</span></dd>
-                                              <dd className="price__compare"><span className="price-item price-item--regular">MRP. ₹{formatter.format(value?.product_price)}</span></dd>
-                                            </div>
-                                          </dl>
-                                        </div>
+                                        <div className="price price--on-sale">
+                                    <dl>
+                                      <div className="price__sale">
+                                        {(() => {
+                                          const mrp = Number(value.product_price);
+                                          const selling = Number(value.product_selling_price);
+
+                                          const discount =
+                                            mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+
+                                          return (
+                                            <>
+                                              <dd>
+                                                <span className="price-item price-item--sale">
+                                                  ₹{selling.toFixed(2)}
+                                                </span>
+                                              </dd>
+
+                                              <dd className="price__compare">
+                                                <span className="price-item price-item--regular">
+                                                  MRP. ₹{mrp.toFixed(2)}
+                                                </span>
+                                              </dd>
+
+                                              {discount > 0 && (
+                                                <span className="price_discount">{discount}% Off</span>
+                                              )}
+                                            </>
+                                          );
+                                        })()}
+                                      </div>
+                                    </dl>
+                                  </div>
                                       </div>
                                     </div>
                                     <a href={`/products/${value?.product_slug}`} className="link link--overlay card-wrapper__link--overlay js-color-swatches-link"></a>

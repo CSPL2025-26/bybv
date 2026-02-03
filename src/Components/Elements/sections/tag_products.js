@@ -130,20 +130,21 @@ function TagProducts() {
                                             {subvalue.product_name}
                                           </a>
                                         </h3>
-                                        <div className="price  price--on-sale ">
+                                        <div className="price price--on-sale">
                                           <dl>
                                             <div className="price__sale">
-                                              <dd>
-                                                <span className="price-item price-item--sale">
-                                                  ₹{formatter.format(subvalue.product_selling_price)}
-                                                </span>
-                                              </dd>
-                                              <dd className="price__compare">
-                                                <span className="price-item price-item--regular">
-                                                  MRP. ₹{formatter.format(subvalue.product_price)}
-                                                </span>
-                                              </dd>
-                                              <dd className="card__badge"></dd>
+                                              {(() => {
+                                                const mrp = Number(subvalue.product_price);
+                                                const selling = Number(subvalue.product_selling_price);
+                                                const discount = mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                                                return (
+                                                  <>
+                                                    <dd><span className="price-item price-item--sale">₹{selling.toFixed(2)}</span></dd>
+                                                    <dd className="price__compare"><span className="price-item price-item--regular">MRP. ₹{mrp.toFixed(2)}</span></dd>
+                                                    {discount > 0 && (<span className="price_discount">{discount}% Off</span>)}
+                                                  </>
+                                                );
+                                              })()}
                                             </div>
                                           </dl>
                                         </div>
@@ -530,44 +531,22 @@ function TagProducts() {
                                             {subvalue.product_name}
                                           </a>
                                         </h3>
-                                        <div className="price  price--on-sale ">
+                                        <div className="price price--on-sale">
                                           <dl>
                                             <div className="price__sale">
-                                              <dt>
-                                                <span className="visually-hidden visually-hidden--inline">
-                                                  Sale price
-                                                </span>
-                                              </dt>
-                                              <dd>
-                                                <span className="price-item price-item--sale">
-                                                  ₹{formatter.format(subvalue.product_selling_price)}
-                                                </span>
-                                              </dd>
-                                              <dt className="price__compare">
-                                                <span className="visually-hidden visually-hidden--inline">
-                                                  Regular price
-                                                </span>
-                                              </dt>
-                                              <dd className="price__compare">
-                                                <span className="price-item price-item--regular">
-                                                  MRP. ₹{formatter.format(subvalue.product_price)}
-                                                </span>
-                                              </dd>
-                                              <dd className="card__badge"></dd>
+                                              {(() => {
+                                                const mrp = Number(subvalue.product_price);
+                                                const selling = Number(subvalue.product_selling_price);
+                                                const discount = mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                                                return (
+                                                  <>
+                                                    <dd><span className="price-item price-item--sale">₹{selling.toFixed(2)}</span></dd>
+                                                    <dd className="price__compare"><span className="price-item price-item--regular">MRP. ₹{mrp.toFixed(2)}</span></dd>
+                                                    {discount > 0 && (<span className="price_discount">{discount}% Off</span>)}
+                                                  </>
+                                                );
+                                              })()}
                                             </div>
-                                            <dl className="unit-price caption hidden">
-                                              <dt className="visually-hidden">
-                                                Unit price
-                                              </dt>
-                                              <dd>
-                                                <span></span>
-                                                <span aria-hidden="true">/</span>
-                                                <span className="visually-hidden">
-                                                  &nbsp;per&nbsp;
-                                                </span>
-                                                <span></span>
-                                              </dd>
-                                            </dl>
                                           </dl>
                                         </div>
                                       </div>
