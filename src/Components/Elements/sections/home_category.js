@@ -296,6 +296,13 @@ function HomeCategory() {
                                           </div>
                                         </dl>
                                       </div>
+                                      {Number(subvalue.product_rating) > 0 && Number(subvalue.product_review) > 0 && (
+                                        <span>
+                                          {"★".repeat(Math.floor(Number(subvalue.product_rating)))}
+                                          {"☆".repeat(5 - Math.floor(Number(subvalue.product_rating)))}
+                                          {" " + Number(subvalue.product_review) + " reviews"}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                   <a
@@ -535,6 +542,13 @@ function HomeCategory() {
                                         </div>
                                       </dl>
                                     </div>
+                                    {Number(subvalue.product_rating) > 0 && Number(subvalue.product_review) > 0 && (
+                                        <span>
+                                          {"★".repeat(Math.floor(Number(subvalue.product_rating)))}
+                                          {"☆".repeat(5 - Math.floor(Number(subvalue.product_rating)))}
+                                          {" " + Number(subvalue.product_review) + " reviews"}
+                                        </span>
+                                      )}
                                   </div>
                                 </div>
                                 <a

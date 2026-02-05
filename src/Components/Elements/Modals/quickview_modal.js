@@ -511,6 +511,13 @@ function QuickviewModal({ showModal, handleClose, slugData }) {
                     <div className="product__title__wrapper">
                       <h1 className="product__title h3">{productData.product_name}</h1>
                     </div>
+                    {Number(productData.product_rating) > 0 && Number(productData.product_review) > 0 && (
+                      <span>
+                        {"★".repeat(Math.floor(Number(productData.product_rating)))}
+                        {"☆".repeat(5 - Math.floor(Number(productData.product_rating)))}
+                        {" " + Number(productData.product_review) + " reviews"}
+                      </span>
+                    )}
                     <div className="price-wrapper">
                       <div className="price  price--on-sale">
                         <dl>
@@ -529,13 +536,14 @@ function QuickviewModal({ showModal, handleClose, slugData }) {
                                     <span className="price-item price-item--regular">MRP. ₹{mrp.toFixed(2)}</span>
                                     {discount > 0 && (<span className="price_discount"> {discount}% Off</span>)}
                                   </dd> : null}
-                                  
+
                               </>
                             );
                           })()}
                         </dl>
-                      </div> 
+                      </div>
                     </div>
+                    
                     <div className="stock-text">
                       Availability:
                       {productData.product_type === 0 ? (

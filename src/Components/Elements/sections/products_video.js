@@ -265,6 +265,13 @@ function ProductsVedio() {
                                         </div>
                                       </dl>
                                     </div>
+                                    {Number(value.product_rating) > 0 && Number(value.product_review) > 0 && (
+                                      <span>
+                                        {"★".repeat(Math.floor(Number(value.product_rating)))}
+                                        {"☆".repeat(5 - Math.floor(Number(value.product_rating)))}
+                                        {" " + Number(value.product_review) + " reviews"}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                                 <a
@@ -509,6 +516,13 @@ function ProductsVedio() {
                                         </div>
                                       </dl>
                                     </div>
+                                    {Number(value.product_rating) > 0 && Number(value.product_review) > 0 && (
+                                      <span>
+                                        {"★".repeat(Math.floor(Number(value.product_rating)))}
+                                        {"☆".repeat(5 - Math.floor(Number(value.product_rating)))}
+                                        {" " + Number(value.product_review) + " reviews"}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                                 <a

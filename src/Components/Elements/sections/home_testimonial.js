@@ -36,7 +36,7 @@ function HomeTestimonial() {
     setLoading(true)
     const payload = contextValues.currentLocation;
 
-    ApiService.postData('testimonials',payload).then(res => {
+    ApiService.postData('testimonials', payload).then(res => {
       if (res.status === 'success') {
         setTestimonials(res.testimonial)
         setTestimonialImage(res.testimonial_image_path)
@@ -254,38 +254,45 @@ function HomeTestimonial() {
                                             {value?.product_name}</a>
                                         </h3>
                                         <div className="price price--on-sale">
-                                    <dl>
-                                      <div className="price__sale">
-                                        {(() => {
-                                          const mrp = Number(value.product_price);
-                                          const selling = Number(value.product_selling_price);
+                                          <dl>
+                                            <div className="price__sale">
+                                              {(() => {
+                                                const mrp = Number(value.product_price);
+                                                const selling = Number(value.product_selling_price);
 
-                                          const discount =
-                                            mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                                                const discount =
+                                                  mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
 
-                                          return (
-                                            <>
-                                              <dd>
-                                                <span className="price-item price-item--sale">
-                                                  ₹{selling.toFixed(2)}
-                                                </span>
-                                              </dd>
+                                                return (
+                                                  <>
+                                                    <dd>
+                                                      <span className="price-item price-item--sale">
+                                                        ₹{selling.toFixed(2)}
+                                                      </span>
+                                                    </dd>
 
-                                              <dd className="price__compare">
-                                                <span className="price-item price-item--regular">
-                                                  MRP. ₹{mrp.toFixed(2)}
-                                                </span>
-                                              </dd>
+                                                    <dd className="price__compare">
+                                                      <span className="price-item price-item--regular">
+                                                        MRP. ₹{mrp.toFixed(2)}
+                                                      </span>
+                                                    </dd>
 
-                                              {discount > 0 && (
-                                                <span className="price_discount">{discount}% Off</span>
-                                              )}
-                                            </>
-                                          );
-                                        })()}
-                                      </div>
-                                    </dl>
-                                  </div>
+                                                    {discount > 0 && (
+                                                      <span className="price_discount">{discount}% Off</span>
+                                                    )}
+                                                  </>
+                                                );
+                                              })()}
+                                            </div>
+                                          </dl>
+                                        </div>
+                                        {Number(value.product_rating) > 0 && Number(value.product_review) > 0 && (
+                                          <span>
+                                            {"★".repeat(Math.floor(Number(value.product_rating)))}
+                                            {"☆".repeat(5 - Math.floor(Number(value.product_rating)))}
+                                            {" " + Number(value.product_review) + " reviews"}
+                                          </span>
+                                        )}
                                       </div>
                                     </div>
                                     <a href={`/products/${value?.product_slug}`} className="link link--overlay card-wrapper__link--overlay js-color-swatches-link"></a>
