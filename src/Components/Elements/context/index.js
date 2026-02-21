@@ -16,6 +16,7 @@ export const DataProvider = ({ children }) => {
   const [cartSummary, setCartSummary] = useState({});
   const [currentLocation, setCurrentLocation] = useState(localStorage.getItem("userLocation") ? JSON.parse(localStorage.getItem("userLocation")) : {});
   const [curretnLocationLoader, setCurretnLocationLoader] = useState(false)
+  const [youMayAlsoLikeProducts, setYouMayAlsoLikeProducts] = useState([])
   const didMountRef = useRef(true);
 
   useEffect(() => {
@@ -24,6 +25,14 @@ export const DataProvider = ({ children }) => {
         if (res?.status === "success") {
           setSettingData(res?.sitesettings);
           setSettingImageBaseUrl(res?.setting_image_path);
+        }
+      });
+      const dataString = {
+        location: currentLocation
+      }
+      ApiService.postData("youMayAlsoLike", dataString).then((res) => {
+        if (res?.status === "success") {
+          setYouMayAlsoLikeProducts(res.products)
         }
       });
     }
@@ -47,8 +56,9 @@ export const DataProvider = ({ children }) => {
         cartSessionData, setCartSessionData,
         cartDealSessionData, setCartDealSessionData,
         cartSummary, setCartSummary,
-        currentLocation, saveLocation ,
-        curretnLocationLoader, setCurretnLocationLoader
+        currentLocation, saveLocation,
+        curretnLocationLoader, setCurretnLocationLoader,
+        youMayAlsoLikeProducts, setYouMayAlsoLikeProducts
       }
     }>
       {children}

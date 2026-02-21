@@ -1703,13 +1703,123 @@ function CollectionsDetail() {
 
           </>
         }
-
-
+        <section className="section-gap-small section-mdgap-small">
+          <div className="container"> 
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="avg-rating-container">
+                  <mark>5.0</mark>
+                  <div className="avg-rating">
+                    <span className="avg-rating-title">Average Rating</span>
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "100%"}}></span>
+                      </div>
+                      <span className="rating-reviews">(10 Reviews)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="ratings-list mb-3">
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "100%"}}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{width: "100%"}}></span>
+                    </div>
+                    <div className="progress-value">1</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "80%"}}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{width: "100%"}}></span>
+                    </div>
+                    <div className="progress-value">1</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "60%"}}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{width: "100%"}}></span>
+                    </div>
+                    <div className="progress-value">1</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "40%"}}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{width: "100%"}}></span>
+                    </div>
+                    <div className="progress-value">1</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{width: "20%"}}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{width: "100%"}}></span>
+                    </div>
+                    <div className="progress-value">1</div>
+                  </div>
+                </div>
+                <button type="button" className="btn btn-primary btn-md add_review  mb-20">Write a Review</button>
+              </div>
+              <div className="col-lg-8">
+                <ul className="comments-list"> 
+                  <li>
+                    <div className="comment">
+                      <figure className="comment-media">
+                        <a href="#"><img src="/img/user.png" alt="avatar" className="img-fluid"
+                        /></a>
+                      </figure>
+                      <div className="comment-body">
+                        <div className="comment-rating ratings-container">
+                          <div className="ratings-full">
+                            <span className="ratings" style={{width: "100%"}}></span>
+                          </div>
+                        </div>
+                        <div className="comment-user mb-3">
+                          <span className="comment-date"
+                          >by <span className="text-dark">Harsh Lakhera</span> on
+                            <span className="font-weight-semi-bold text-dark"
+                            >Aug 13, 2025</span>
+                          </span>
+                        </div>
+                        <div className="comment-content mb-3">
+                          <p>Good quality product .must buy for your child</p>
+                        </div> 
+                        <div className="file-input-wrappers"> 
+                          <img
+                            className="btn-play btn-img pwsp"
+                            src="/public/img/user.png"
+                            width="70"
+                            alt=""
+                          /> 
+                        </div> 
+                      </div>
+                    </div>
+                  </li> 
+                </ul>
+              </div>
+            </div> 
+          </div>
+        </section>
         <Footer />
-
-
       </BrowserView>
-
       <MobileView>
         <Header></Header>
         {
