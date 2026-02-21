@@ -453,27 +453,7 @@ function CartModal({ cartModalActive, cartModalToggle }) {
                                                                                         {value.gallery.length > 0 ? (
                                                                                             <img style={{ objectFit: 'cover' }} src={value.gallery[0].gallery_image ? value.gallery[0].gallery_image : constants.DEFAULT_IMAGE} alt={value.product_name} className='motion-reduce media--second' />
                                                                                         ) : null}
-                                                                                    </div>
-                                                                                    <div className="quick-add no-js-hidden">
-                                                                                        <button type="button" name="add" className="card__link button button--primary button--full-width">
-                                                                                            <span>
-                                                                                                <svg className="icon icon-button-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                                    <g clipPath="url(#clip0_2071_16434)">
-                                                                                                        <path d="M2.24268 12.2427L12.1422 2.34326" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
-                                                                                                        <path d="M4.36377 1.63617H12.8491V10.1215" stroke="currentColor" strokeWidth="2" strokeLinecap="square"></path>
-                                                                                                    </g>
-                                                                                                    <defs>
-                                                                                                        <clipPath id="clip0_2071_16434"><rect width="14" height="14" fill="currentColor"></rect></clipPath>
-                                                                                                    </defs>
-                                                                                                </svg>
-                                                                                            </span>
-                                                                                            <div className="loading-overlay__spinner hidden">
-                                                                                                <svg aria-hidden="true" focusable="false" role="presentation" className="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-                                                                                                    <circle className="path" fill="none" strokeWidth="6" cx="33" cy="33" r="30"></circle>
-                                                                                                </svg>
-                                                                                            </div>
-                                                                                        </button>
-                                                                                    </div>
+                                                                                    </div> 
                                                                                 </div>
                                                                             </div>
                                                                             <div className="card-information">
