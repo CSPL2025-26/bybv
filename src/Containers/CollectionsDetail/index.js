@@ -24,6 +24,7 @@ function CollectionsDetail() {
 
   const didMountRef = useRef(true)
   const [productData, setProductData] = useState("")
+  const [reviewData, setReviewData] = useState("")
   const [productDataGallery, setProductDataGallery] = useState([])
   const [productVariationDataGallery, setproductVariationDataGallery] = useState([])
   const [VarImageUrl, setVarImageUrl] = useState('')
@@ -105,6 +106,7 @@ function CollectionsDetail() {
     }
     ApiService.postData("product-details", dataString).then((res) => {
       if (res.status == "success") {
+        setReviewData(res.reviewData)
         setAdminData(res.admin_data);
         setProductData(res.rowProductData)
         setProductDataGallery(res?.rowProductData?.gallery)
@@ -1704,18 +1706,18 @@ function CollectionsDetail() {
           </>
         }
         <section className="section-gap-small section-mdgap-small">
-          <div className="container"> 
+          <div className="container">
             <div className="row">
               <div className="col-lg-4">
                 <div className="avg-rating-container">
-                  <mark>5.0</mark>
+                  <mark>{reviewData.finalrating}</mark>
                   <div className="avg-rating">
                     <span className="avg-rating-title">Average Rating</span>
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "100%"}}></span>
+                        <span className="ratings" style={{ width: reviewData.finalrating * 20 }}></span>
                       </div>
-                      <span className="rating-reviews">(10 Reviews)</span>
+                      <span className="rating-reviews">({reviewData.review} Reviews)</span>
                     </div>
                   </div>
                 </div>
@@ -1723,99 +1725,120 @@ function CollectionsDetail() {
                   <div className="ratings-item">
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "100%"}}></span>
+                        <span className="ratings" style={{ width: "100%" }}></span>
                       </div>
                     </div>
                     <div className="rating-percent">
-                      <span style={{width: "100%"}}></span>
+                      <span style={{ width: reviewData.fivestar * 100 }}></span>
                     </div>
-                    <div className="progress-value">1</div>
+                    <div className="progress-value">{reviewData.fivestar}</div>
                   </div>
                   <div className="ratings-item">
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "80%"}}></span>
+                        <span className="ratings" style={{ width: "80%" }}></span>
                       </div>
                     </div>
                     <div className="rating-percent">
-                      <span style={{width: "100%"}}></span>
+                      <span style={{ width: reviewData.fourstar * 100 }}></span>
                     </div>
-                    <div className="progress-value">1</div>
+                    <div className="progress-value">{reviewData.fourstar}</div>
                   </div>
                   <div className="ratings-item">
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "60%"}}></span>
+                        <span className="ratings" style={{ width: "60%" }}></span>
                       </div>
                     </div>
                     <div className="rating-percent">
-                      <span style={{width: "100%"}}></span>
+                      <span style={{ width: reviewData.threestar * 100 }}></span>
                     </div>
-                    <div className="progress-value">1</div>
+                    <div className="progress-value">{reviewData.threestar}</div>
                   </div>
                   <div className="ratings-item">
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "40%"}}></span>
+                        <span className="ratings" style={{ width: "40%" }}></span>
                       </div>
                     </div>
                     <div className="rating-percent">
-                      <span style={{width: "100%"}}></span>
+                      <span style={{ width: reviewData.twostar * 100 }}></span>
                     </div>
-                    <div className="progress-value">1</div>
+                    <div className="progress-value">{reviewData.twostar}</div>
                   </div>
                   <div className="ratings-item">
                     <div className="ratings-container mb-0">
                       <div className="ratings-full">
-                        <span className="ratings" style={{width: "20%"}}></span>
+                        <span className="ratings" style={{ width: "20%" }}></span>
                       </div>
                     </div>
                     <div className="rating-percent">
-                      <span style={{width: "100%"}}></span>
+                      <span style={{ width: reviewData.onestar * 100 }}></span>
                     </div>
-                    <div className="progress-value">1</div>
+                    <div className="progress-value">{reviewData.onestar}</div>
                   </div>
                 </div>
                 <button type="button" className="btn btn-primary btn-md add_review  mb-20">Write a Review</button>
               </div>
               <div className="col-lg-8">
-                <ul className="comments-list"> 
-                  <li>
-                    <div className="comment">
-                      <figure className="comment-media">
-                        <a href="#"><img src="/img/user.png" alt="avatar" className="img-fluid"
-                        /></a>
-                      </figure>
-                      <div className="comment-body">
-                        <div className="comment-rating ratings-container">
-                          <div className="ratings-full">
-                            <span className="ratings" style={{width: "100%"}}></span>
+                <ul className="comments-list">
+                  {reviewData?.reviews?.length > 0 ? (
+                    reviewData.reviews.map((item) => {
+                      const ratingPercent = (item.pr_rating / 5) * 100;
+
+                      return (
+                        <li key={item.pr_id}>
+                          <div className="comment">
+                            <figure className="comment-media">
+                              <a href="#">
+                                <img
+                                  src="/img/user.png"
+                                  alt="avatar"
+                                  className="img-fluid"
+                                />
+                              </a>
+                            </figure>
+
+                            <div className="comment-body">
+                              {/* Rating */}
+                              <div className="comment-rating ratings-container">
+                                <div className="ratings-full">
+                                  <span
+                                    className="ratings"
+                                    style={{ width: `${ratingPercent}%` }}
+                                  ></span>
+                                </div>
+                              </div>
+
+                              {/* User + Date */}
+                              <div className="comment-user mb-3">
+                                <span className="comment-date">
+                                  by <span className="text-dark">{item.pr_title}</span> on{" "}
+                                  <span className="font-weight-semi-bold text-dark">
+                                    {new Date(item.pr_created).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </span>
+                                </span>
+                              </div>
+
+                              {/* Review */}
+                              <div className="comment-content mb-3">
+                                <p>{item.pr_review}</p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="comment-user mb-3">
-                          <span className="comment-date"
-                          >by <span className="text-dark">Harsh Lakhera</span> on
-                            <span className="font-weight-semi-bold text-dark"
-                            >Aug 13, 2025</span>
-                          </span>
-                        </div>
-                        <div className="comment-content mb-3">
-                          <p>Good quality product .must buy for your child</p>
-                        </div> 
-                        <div className="file-input-wrappers"> 
-                          <img
-                            className="btn-play btn-img pwsp"
-                            src="/public/img/user.png"
-                            width="70"
-                            alt=""
-                          /> 
-                        </div> 
-                      </div>
-                    </div>
-                  </li> 
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li>No reviews found</li>
+                  )}
                 </ul>
               </div>
-            </div> 
+            </div>
           </div>
         </section>
         <Footer />
@@ -2848,6 +2871,142 @@ function CollectionsDetail() {
             </section>
           </>
         }
+        <section className="section-gap-small section-mdgap-small">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-4">
+                <div className="avg-rating-container">
+                  <mark>{reviewData.finalrating}</mark>
+                  <div className="avg-rating">
+                    <span className="avg-rating-title">Average Rating</span>
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: reviewData.finalrating * 20 }}></span>
+                      </div>
+                      <span className="rating-reviews">({reviewData.review} Reviews)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="ratings-list mb-3">
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: "100%" }}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{ width: reviewData.fivestar * 100 }}></span>
+                    </div>
+                    <div className="progress-value">{reviewData.fivestar}</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: "80%" }}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{ width: reviewData.fourstar * 100 }}></span>
+                    </div>
+                    <div className="progress-value">{reviewData.fourstar}</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: "60%" }}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{ width: reviewData.threestar * 100 }}></span>
+                    </div>
+                    <div className="progress-value">{reviewData.threestar}</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: "40%" }}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{ width: reviewData.twostar * 100 }}></span>
+                    </div>
+                    <div className="progress-value">{reviewData.twostar}</div>
+                  </div>
+                  <div className="ratings-item">
+                    <div className="ratings-container mb-0">
+                      <div className="ratings-full">
+                        <span className="ratings" style={{ width: "20%" }}></span>
+                      </div>
+                    </div>
+                    <div className="rating-percent">
+                      <span style={{ width: reviewData.onestar * 100 }}></span>
+                    </div>
+                    <div className="progress-value">{reviewData.onestar}</div>
+                  </div>
+                </div>
+                <button type="button" className="btn btn-primary btn-md add_review  mb-20">Write a Review</button>
+              </div>
+              <div className="col-lg-8">
+                <ul className="comments-list">
+                  {reviewData?.reviews?.length > 0 ? (
+                    reviewData.reviews.map((item) => {
+                      const ratingPercent = (item.pr_rating / 5) * 100;
+
+                      return (
+                        <li key={item.pr_id}>
+                          <div className="comment">
+                            <figure className="comment-media">
+                              <a href="#">
+                                <img
+                                  src="/img/user.png"
+                                  alt="avatar"
+                                  className="img-fluid"
+                                />
+                              </a>
+                            </figure>
+
+                            <div className="comment-body">
+                              {/* Rating */}
+                              <div className="comment-rating ratings-container">
+                                <div className="ratings-full">
+                                  <span
+                                    className="ratings"
+                                    style={{ width: `${ratingPercent}%` }}
+                                  ></span>
+                                </div>
+                              </div>
+
+                              {/* User + Date */}
+                              <div className="comment-user mb-3">
+                                <span className="comment-date">
+                                  by <span className="text-dark">{item.pr_title}</span> on{" "}
+                                  <span className="font-weight-semi-bold text-dark">
+                                    {new Date(item.pr_created).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
+                                  </span>
+                                </span>
+                              </div>
+
+                              {/* Review */}
+                              <div className="comment-content mb-3">
+                                <p>{item.pr_review}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li>No reviews found</li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
         <Footer></Footer>
       </MobileView>
       {
