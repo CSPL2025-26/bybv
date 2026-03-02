@@ -189,8 +189,7 @@ function Popularproducts() {
                                           const mrp = Number(value.product_price);
                                           const selling = Number(value.product_selling_price);
 
-                                          const discount =
-                                            mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
+                                          const discount =  mrp > 0 ? (((mrp - selling) / mrp) * 100).toFixed(2) : "0.00";
 
                                           return (
                                             <>
@@ -469,9 +468,7 @@ function Popularproducts() {
                                           const mrp = Number(value.product_price);
                                           const selling = Number(value.product_selling_price);
 
-                                          const discount =
-                                            mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
-
+                                          const discount = mrp > 0 ? (((mrp - selling) / mrp) * 100).toFixed(2) : "0.00";
                                           return (
                                             <>
                                               <dd>

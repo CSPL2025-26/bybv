@@ -453,7 +453,7 @@ function CartModal({ cartModalActive, cartModalToggle }) {
                                                                                         {value.gallery.length > 0 ? (
                                                                                             <img style={{ objectFit: 'cover' }} src={value.gallery[0].gallery_image ? value.gallery[0].gallery_image : constants.DEFAULT_IMAGE} alt={value.product_name} className='motion-reduce media--second' />
                                                                                         ) : null}
-                                                                                    </div> 
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div className="card-information">
@@ -466,10 +466,7 @@ function CartModal({ cartModalActive, cartModalToggle }) {
                                                                                                 {(() => {
                                                                                                     const mrp = Number(value.product_price);
                                                                                                     const selling = Number(value.product_selling_price);
-
-                                                                                                    const discount =
-                                                                                                        mrp > 0 ? Math.round(((mrp - selling) / mrp) * 100) : 0;
-
+                                                                                                    const discount = mrp > 0 ? (((mrp - selling) / mrp) * 100).toFixed(2) : "0.00";
                                                                                                     return (
                                                                                                         <>
                                                                                                             <dd>
