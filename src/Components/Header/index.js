@@ -463,6 +463,7 @@ function Header() {
                         href="javascript:void(0)"
                         className="header__cart unstyled-link hover-opacity"
                         onClick={cartModalToggle}
+                        id="cartModal"
                       >
                         Cart (
                         {contextValues.cartCount !== "" && contextValues.cartCount !== null

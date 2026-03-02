@@ -16,6 +16,8 @@ import { Helmet } from "react-helmet";
 import { trackAddToCart } from "../../Components/services/facebookTracking";
 import ReactPixel from "../../Components/services/FacebookPixel";
 import Loader from "react-js-loader";
+import ReviewModal from "../../Components/Elements/Modals/review_modal";
+import LoginModal from "../../Components/Elements/Modals/login_modal";
 
 function CollectionsDetail() {
   const navigate = useNavigate()
@@ -42,7 +44,10 @@ function CollectionsDetail() {
   const sliderRef1 = useRef(null);
   const [setSession, SetSession] = useState("");
   const [spinnerLoading, setSpinnerLoading] = useState(false);
-
+  const [reviewModalActive, setreviewModalActive] = useState(false);
+  const reviewModalToggle = () => {
+    setreviewModalActive(!reviewModalActive);
+  };
   const handleShowQuickModal = (slug) => {
     setSlugData(slug)
     setShowModal(true);
@@ -361,7 +366,10 @@ function CollectionsDetail() {
     contextValues.setCouponSession({})
     localStorage.removeItem("COUPON_SESSION");
     trackAddToCart(cartSession)
-
+    const element = document.querySelector("#cartModal");
+    if (element) {
+      element.click();
+    }
     if (purchaseType === 1) {
       navigate("/cart");
     }
@@ -405,6 +413,11 @@ function CollectionsDetail() {
         contextValues.setcartCount(res.data.resCartData.length)
         contextValues.setCartSessionData(res.data.resCartData)
         setSpinnerLoading(false);
+
+        const element = document.querySelector("#cartModal");
+        if (element) {
+          element.click();
+        }
         if (purchaseType === 1) {
           navigate("/cart");
         }
@@ -437,7 +450,9 @@ function CollectionsDetail() {
       return <span className="outofdtock">Out of Stock</span>;
     }
   };
-
+  const loginModal = () => {
+    contextValues.setToggleLoginModal(!contextValues.toggleLoginModal)
+  }
   return (
     <>
       <Helmet>
@@ -1778,7 +1793,11 @@ function CollectionsDetail() {
                     <div className="progress-value">{reviewData.onestar}</div>
                   </div>
                 </div>
-                <button type="button" className="btn btn-primary btn-md add_review  mb-20">Write a Review</button>
+                {setSession ?
+                  <button type="button" className="btn btn-primary btn-md add_review  mb-20" onClick={reviewModalToggle}>Write a Review</button>
+                  :
+                  <button type="button" className="btn btn-primary btn-md add_review  mb-20" onClick={(e) => loginModal()}>Write a Review</button>
+                }
               </div>
               <div className="col-lg-8">
                 <ul className="comments-list">
@@ -2442,12 +2461,8 @@ function CollectionsDetail() {
                 </div>
               </div>
             </section>
-
-
           </> : <>
-
             {/* collection details skeleton start */}
-
             <Swiper
               spaceBetween={0}
               modules={[Pagination]}
@@ -2687,12 +2702,9 @@ function CollectionsDetail() {
                 </div>
               </div>
             </section>
-
             {/* collection details skeleton end */}
-
           </>
         }
-
         {
           loading2 === false ? <>
             <section className="section-product-recommendations spaced-section">
@@ -2808,9 +2820,7 @@ function CollectionsDetail() {
               </div>
             </section>
           </> : <>
-
             {/* Related products skeleton start */}
-
             <section className="section-product-recommendations spaced-section">
               <div className="product-recommendations">
                 <div className="section-header__line">
@@ -3013,6 +3023,11 @@ function CollectionsDetail() {
         showModal ?
           <QuickviewModal showModal={showModal} handleClose={handleClose} slugData={slugData} />
           : null}
+      {
+        reviewModalActive ?
+          <ReviewModal reviewModalActive={reviewModalActive} reviewModalToggle={reviewModalToggle} productData={productData} />
+          : null}
+      <LoginModal />
     </>
   );
 }
