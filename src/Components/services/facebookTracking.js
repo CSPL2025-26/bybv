@@ -1,4 +1,4 @@
-import ReactPixel from '../services/FacebookPixel';
+import ReactPixel from './FacebookPixel';
 
 const trackPageView = () => {
     ReactPixel.pageView(); // Tracks page views
@@ -16,7 +16,7 @@ const trackAddToCart = (cartSession) => {
         content_ids: contentIds,
         content_type: 'product',
         contents: contents,
-        currency: 'INR',
+        currency: 'INR',    
         value: contents.reduce((total, item) => total + (item.item_price * item.quantity), 0)
     });
 };
